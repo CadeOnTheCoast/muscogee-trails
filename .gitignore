@@ -5,3 +5,5 @@ dist
 .env
 .env.*
 .playwright-mcp
+.vercel
+.env*.local
