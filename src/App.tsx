@@ -15,8 +15,9 @@ import {
   Route,
   Trees,
   Wrench,
+  X,
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
 import { ConditionReading, getTrailConditionReading } from './services/trailConditions';
 
@@ -25,8 +26,13 @@ type FundingGoal = {
   amount: number;
   current: number;
   description: string;
+  importance: string;
+  image: string;
+  imageAlt: string;
   icon: React.ReactNode;
 };
+
+const donateUrl = 'https://www.porc.org/muscogee-trails';
 
 const fundingGoals: FundingGoal[] = [
   {
@@ -34,6 +40,9 @@ const fundingGoals: FundingGoal[] = [
     amount: 2500,
     current: 0,
     description: 'Lumber, drainage, fasteners, signs, surfacing, and trail features that turn volunteer hours into durable work.',
+    importance: 'Materials are what make repairs last: wood for features, rock for drainage, hardware for safety, and supplies for trail work days.',
+    image: '/gallery/rock-garden.jpg',
+    imageAlt: 'Rock armoring and drainage work on trail',
     icon: <Hammer className="h-5 w-5" />,
   },
   {
@@ -41,6 +50,9 @@ const fundingGoals: FundingGoal[] = [
     amount: 7500,
     current: 0,
     description: 'Keeping the machine work moving for bigger shaping, drainage fixes, benching, and feature maintenance.',
+    importance: 'Machine work handles the heavy shaping that hand tools cannot do efficiently, especially on jumps, drainage, and larger rebuilds.',
+    image: '/gallery/dirt-jumps.jpg',
+    imageAlt: 'Dirt jumps shaped on the trail system',
     icon: <Wrench className="h-5 w-5" />,
   },
   {
@@ -48,6 +60,9 @@ const fundingGoals: FundingGoal[] = [
     amount: 5000,
     current: 0,
     description: 'Progressive, maintainable jump lines with room for riders to build skill without skipping safety.',
+    importance: 'Progression features give riders a place to improve gradually and keep the trail system exciting for repeat visits.',
+    image: '/gallery/jump-line.jpg',
+    imageAlt: 'Jump line through pine forest',
     icon: <Mountain className="h-5 w-5" />,
   },
   {
@@ -55,6 +70,9 @@ const fundingGoals: FundingGoal[] = [
     amount: 3500,
     current: 0,
     description: 'Hand tools, power tools, safety gear, and layout supplies for volunteer build days.',
+    importance: 'Good tools let volunteers work faster, cleaner, and safer when maintaining existing trail and opening new sections.',
+    image: '/gallery/wood-feature.jpg',
+    imageAlt: 'Wood trail feature in the pines',
     icon: <Pickaxe className="h-5 w-5" />,
   },
   {
@@ -62,6 +80,9 @@ const fundingGoals: FundingGoal[] = [
     amount: 750,
     current: 0,
     description: 'Fuel for machines, hauling, and maintenance days that keep the public trail system moving.',
+    importance: 'Fuel keeps work days productive, covering machines, hauling, and support trips for maintenance and build projects.',
+    image: '/gallery/skinny-crossing.jpg',
+    imageAlt: 'Wood skinny trail crossing',
     icon: <Fuel className="h-5 w-5" />,
   },
 ];
@@ -94,6 +115,61 @@ function Currency({ value }: { value: number }) {
 function Inches({ millimeters }: { millimeters?: number }) {
   if (millimeters === undefined) return <>--</>;
   return <>{(millimeters / 25.4).toFixed(2)}</>;
+}
+
+function DonutProgress({ current, goal }: { current: number; goal: number }) {
+  const radius = 54;
+  const circumference = 2 * Math.PI * radius;
+  const percentage = Math.min(100, Math.round((current / goal) * 100));
+  const offset = circumference - (percentage / 100) * circumference;
+
+  return (
+    <div className="relative h-40 w-40">
+      <motion.svg
+        viewBox="0 0 140 140"
+        className="h-full w-full"
+        initial={{ rotate: -120 }}
+        animate={{ rotate: 0 }}
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+      >
+        <circle cx="70" cy="70" r={radius} fill="none" stroke="#eadfca" strokeWidth="16" />
+        <motion.circle
+          cx="70"
+          cy="70"
+          r={radius}
+          fill="none"
+          stroke="#a6532f"
+          strokeLinecap="round"
+          strokeWidth="16"
+          strokeDasharray={circumference}
+          initial={{ strokeDashoffset: circumference, rotate: -90 }}
+          animate={{ strokeDashoffset: 0, rotate: 270 }}
+          transition={{ duration: 0.9, ease: 'easeOut' }}
+          style={{ transformOrigin: '70px 70px' }}
+        />
+        <motion.circle
+          cx="70"
+          cy="70"
+          r={radius}
+          fill="none"
+          stroke="#2f8f5b"
+          strokeLinecap="round"
+          strokeWidth="16"
+          strokeDasharray={circumference}
+          initial={{ strokeDashoffset: circumference, rotate: -90 }}
+          animate={{ strokeDashoffset: offset, rotate: -90 }}
+          transition={{ duration: 0.9, delay: 0.55, ease: 'easeOut' }}
+          style={{ transformOrigin: '70px 70px' }}
+        />
+      </motion.svg>
+      <div className="absolute inset-0 grid place-items-center text-center">
+        <div>
+          <p className="text-3xl font-black text-pine">{percentage}%</p>
+          <p className="text-xs font-black uppercase tracking-wide text-ink/55">funded</p>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function Navbar() {
@@ -232,11 +308,20 @@ function TrailConditionGauge() {
   );
 }
 
-function FundingCard({ goal }: { goal: FundingGoal }) {
+function FundingCard({ goal, onSelect }: { goal: FundingGoal; onSelect: (goal: FundingGoal) => void }) {
   const percent = Math.min(100, Math.round((goal.current / goal.amount) * 100));
 
   return (
-    <motion.article initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-80px' }} transition={{ duration: 0.45 }} className="rounded border border-black/10 bg-white p-5 shadow-sm">
+    <motion.button
+      type="button"
+      onClick={() => onSelect(goal)}
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -4 }}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 0.45 }}
+      className="rounded border border-black/10 bg-white p-5 text-left shadow-sm transition hover:border-clay hover:shadow-trail focus:outline-none focus:ring-4 focus:ring-sand/70"
+    >
       <div className="flex items-start justify-between gap-4">
         <div className="grid h-11 w-11 place-items-center rounded bg-pine text-white">{goal.icon}</div>
         <p className="text-2xl font-black text-clay">
@@ -252,11 +337,88 @@ function FundingCard({ goal }: { goal: FundingGoal }) {
         <span><Currency value={goal.current} /> raised</span>
         <span>{percent}%</span>
       </div>
-    </motion.article>
+      <p className="mt-4 text-xs font-black uppercase tracking-wide text-pine">View goal</p>
+    </motion.button>
+  );
+}
+
+function FundingGoalModal({ goal, onClose }: { goal: FundingGoal | null; onClose: () => void }) {
+  if (!goal) return null;
+
+  const percent = Math.min(100, Math.round((goal.current / goal.amount) * 100));
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        className="fixed inset-0 z-[80] overflow-y-auto bg-ink/70 px-4 py-6 backdrop-blur-sm"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={onClose}
+      >
+        <motion.div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="funding-goal-title"
+          className="mx-auto max-w-5xl overflow-hidden rounded border border-white/20 bg-[#f8f7f1] shadow-2xl"
+          initial={{ opacity: 0, y: 28, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 18, scale: 0.98 }}
+          transition={{ duration: 0.25 }}
+          onClick={(event) => event.stopPropagation()}
+        >
+          <div className="grid lg:grid-cols-[0.95fr_1.05fr]">
+            <div className="relative min-h-[320px] bg-ink">
+              <img src={goal.image} alt={goal.imageAlt} className="absolute inset-0 h-full w-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/45 to-transparent" />
+            </div>
+            <div className="relative p-6 sm:p-8">
+              <button
+                type="button"
+                onClick={onClose}
+                className="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded bg-white text-ink shadow-sm transition hover:bg-sand focus:outline-none focus:ring-4 focus:ring-sand/70"
+                aria-label="Close funding goal"
+              >
+                <X className="h-5 w-5" />
+              </button>
+
+              <div className="pr-10">
+                <p className="text-sm font-black uppercase tracking-[0.24em] text-clay">Fundraising goal</p>
+                <h3 id="funding-goal-title" className="mt-2 font-display text-4xl font-black leading-tight text-pine sm:text-5xl">{goal.title}</h3>
+              </div>
+
+              <div className="mt-8 grid gap-6 md:grid-cols-[180px_1fr] md:items-center">
+                <DonutProgress current={goal.current} goal={goal.amount} />
+                <div>
+                  <p className="text-4xl font-black text-clay"><Currency value={goal.amount} /></p>
+                  <p className="mt-2 text-sm font-black uppercase tracking-wide text-ink/55">
+                    <Currency value={goal.current} /> raised · {percent}% funded
+                  </p>
+                  <p className="mt-5 leading-7 text-ink/75">{goal.description}</p>
+                  <p className="mt-4 leading-7 text-ink/75">{goal.importance}</p>
+                </div>
+              </div>
+
+              <a
+                href={donateUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-8 inline-flex w-full items-center justify-center gap-3 rounded bg-clay px-6 py-4 text-base font-black uppercase tracking-wide text-white shadow-lg transition hover:bg-[#8d4223] focus:outline-none focus:ring-4 focus:ring-clay/30"
+              >
+                <Heart className="h-5 w-5 fill-current" />
+                Donate to {goal.title}
+                <ExternalLink className="h-5 w-5" />
+              </a>
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 }
 
 function Fundraising() {
+  const [selectedGoal, setSelectedGoal] = useState<FundingGoal | null>(null);
   const total = useMemo(() => fundingGoals.reduce((sum, goal) => sum + goal.amount, 0), []);
 
   return (
@@ -280,10 +442,11 @@ function Fundraising() {
 
         <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-5">
           {fundingGoals.map((goal) => (
-            <FundingCard key={goal.title} goal={goal} />
+            <FundingCard key={goal.title} goal={goal} onSelect={setSelectedGoal} />
           ))}
         </div>
       </div>
+      <FundingGoalModal goal={selectedGoal} onClose={() => setSelectedGoal(null)} />
     </section>
   );
 }
