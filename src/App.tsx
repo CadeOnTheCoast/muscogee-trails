@@ -85,6 +85,8 @@ const galleryPhotos = [
   { src: '/gallery/dirt-jumps.jpg', alt: 'Dirt jumps at Muscogee' },
 ];
 
+const trailforksMapUrl = 'https://www.trailforks.com/widgets/region_map/?rid=27702&width=100%25&height=560&activitytype=1&maptype=trailforks&trailstyle=difficulty&controls=1';
+
 function Currency({ value }: { value: number }) {
   return <>{value.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })}</>;
 }
@@ -312,11 +314,17 @@ function TrailInfo() {
           </div>
 
           <div className="overflow-hidden rounded border border-black/10 bg-[#f8f7f1] shadow-trail">
-            <img src="/gallery/trail-map-board.jpg" alt="Trailhead map board at Muscogee" className="h-[520px] w-full object-cover" />
+            <iframe
+              title="Trailforks map of Muscogee MTB Trails"
+              src={trailforksMapUrl}
+              className="block h-[560px] w-full border-0"
+              loading="lazy"
+              referrerPolicy="strict-origin-when-cross-origin"
+            />
           </div>
         </div>
 
-        <div className="mt-8 grid gap-3 md:grid-cols-3">
+        <div className="mt-8 grid gap-3 md:grid-cols-2 lg:grid-cols-4">
             <a href="https://www.porc.org/muscogee-trails" target="_blank" rel="noreferrer" className="group flex items-center justify-between rounded border border-black/10 bg-[#f8f7f1] p-5 font-black text-ink transition hover:border-pine hover:bg-pine hover:text-white">
               PORC Muscogee Trails <ExternalLink className="h-5 w-5 transition group-hover:translate-x-1" />
             </a>
