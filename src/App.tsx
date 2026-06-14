@@ -1,7 +1,6 @@
 import {
   ArrowRight,
   Bike,
-  Camera,
   Droplets,
   ExternalLink,
   Facebook,
@@ -9,8 +8,6 @@ import {
   Gauge,
   Hammer,
   Heart,
-  Images,
-  Layers,
   Map,
   Mountain,
   Pickaxe,
@@ -300,19 +297,10 @@ function TrailInfo() {
         <div id="map" className="mt-12 grid gap-8 lg:grid-cols-[0.78fr_1.22fr] lg:items-center">
           <div>
             <p className="text-sm font-black uppercase tracking-[0.25em] text-river">Plan a ride</p>
-            <h2 className="mt-3 font-display text-4xl font-black text-pine sm:text-5xl">Map the trail system</h2>
+            <h2 className="mt-3 font-display text-4xl font-black text-pine sm:text-5xl">Trail map and access</h2>
             <p className="mt-5 text-lg leading-8 text-ink/72">
-              Muscogee is a public trail system near Pensacola with community-built singletrack and ongoing expansion work. The embedded map uses Trailforks today; the site can move to a custom GPX-powered map when we have source trail files.
+              Muscogee is a public trail system near Pensacola with community-built singletrack and ongoing expansion work. Use the interactive map to explore the riding area, then check community updates before heading out.
             </p>
-            <div className="mt-6 rounded border border-river/20 bg-river/5 p-5">
-              <div className="flex items-center gap-3 text-river">
-                <Images className="h-5 w-5" />
-                <h3 className="font-black">Future trail photo layer</h3>
-              </div>
-              <p className="mt-3 text-sm leading-6 text-ink/70">
-                Build this like street view for trails: riders upload geolocated photos, we read EXIF GPS when present, let them place the photo on the map when GPS is missing, then show points or clustered photo counts along the trail.
-              </p>
-            </div>
           </div>
 
           <div className="overflow-hidden rounded border border-black/10 bg-[#f8f7f1] shadow-trail">
@@ -326,29 +314,7 @@ function TrailInfo() {
           </div>
         </div>
 
-        <div className="mt-8 grid gap-5 lg:grid-cols-[1fr_0.78fr]">
-          <div className="rounded border border-black/10 bg-[#f8f7f1] p-5">
-            <div className="flex items-center gap-3 text-pine">
-              <Layers className="h-5 w-5" />
-              <h3 className="font-black">Custom map path</h3>
-            </div>
-            <div className="mt-4 grid gap-3 md:grid-cols-3">
-              <div className="rounded bg-white p-4">
-                <p className="text-sm font-black uppercase tracking-wide text-clay">1. Trail geometry</p>
-                <p className="mt-2 text-sm leading-6 text-ink/65">Import GPX files into GeoJSON and render trails with MapLibre or Leaflet.</p>
-              </div>
-              <div className="rounded bg-white p-4">
-                <p className="text-sm font-black uppercase tracking-wide text-clay">2. Photo uploads</p>
-                <p className="mt-2 text-sm leading-6 text-ink/65">Store originals and thumbnails, extract EXIF GPS, and require moderation before public display.</p>
-              </div>
-              <div className="rounded bg-white p-4">
-                <p className="text-sm font-black uppercase tracking-wide text-clay">3. Trail view</p>
-                <p className="mt-2 text-sm leading-6 text-ink/65">Snap photos to nearby trails and cluster markers until users zoom into a section.</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid gap-3">
+        <div className="mt-8 grid gap-3 md:grid-cols-3">
             <a href="https://www.porc.org/muscogee-trails" target="_blank" rel="noreferrer" className="group flex items-center justify-between rounded border border-black/10 bg-[#f8f7f1] p-5 font-black text-ink transition hover:border-pine hover:bg-pine hover:text-white">
               PORC Muscogee Trails <ExternalLink className="h-5 w-5 transition group-hover:translate-x-1" />
             </a>
@@ -358,16 +324,6 @@ function TrailInfo() {
             <a href="https://www.facebook.com/groups/448148798865409/" target="_blank" rel="noreferrer" className="group flex items-center justify-between rounded border border-black/10 bg-[#f8f7f1] p-5 font-black text-ink transition hover:border-pine hover:bg-pine hover:text-white">
               Facebook community <Facebook className="h-5 w-5 transition group-hover:translate-x-1" />
             </a>
-            <div className="rounded border border-dashed border-black/20 bg-white p-5">
-              <div className="flex items-center gap-3 text-clay">
-                <Camera className="h-5 w-5" />
-                <p className="font-black">Upload flow later</p>
-              </div>
-              <p className="mt-3 text-sm leading-6 text-ink/65">
-                Add sign-in, photo upload, GPS extraction, manual placement, captions, and a moderation queue before publishing markers.
-              </p>
-            </div>
-          </div>
         </div>
       </div>
     </section>
