@@ -3,6 +3,10 @@
     {
       "source": "/gallery",
       "destination": "/index.html"
+    },
+    {
+      "source": "/acknowledgements",
+      "destination": "/index.html"
     }
   ]
 }

@@ -174,12 +174,14 @@ function DonutProgress({ current, goal }: { current: number; goal: number }) {
 
 function Navbar() {
   const isGallery = window.location.pathname === '/gallery';
+  const isAcknowledgements = window.location.pathname === '/acknowledgements';
+  const isSubpage = isGallery || isAcknowledgements;
   const links = [
-    { label: 'Conditions', href: isGallery ? '/#conditions' : '#conditions' },
-    { label: 'Fundraising', href: isGallery ? '/#fundraising' : '#fundraising' },
-    { label: 'Map', href: isGallery ? '/#map' : '#map' },
+    { label: 'Conditions', href: isSubpage ? '/#conditions' : '#conditions' },
+    { label: 'Fundraising', href: isSubpage ? '/#fundraising' : '#fundraising' },
+    { label: 'Map', href: isSubpage ? '/#map' : '#map' },
     { label: 'Gallery', href: '/gallery' },
-    { label: 'Connect', href: isGallery ? '/#connect' : '#connect' },
+    { label: 'Thanks', href: '/acknowledgements' },
   ];
 
   return (
@@ -194,7 +196,7 @@ function Navbar() {
             <span className="block text-xs font-semibold uppercase tracking-[0.22em] text-clay">MTB Trails</span>
           </span>
         </a>
-        <a href={isGallery ? '/#fundraising' : '#fundraising'} className="inline-flex items-center gap-2 rounded bg-clay px-3 py-2 text-xs font-black uppercase tracking-wide text-white shadow-sm transition hover:bg-[#8d4223] md:hidden">
+        <a href={isSubpage ? '/#fundraising' : '#fundraising'} className="inline-flex items-center gap-2 rounded bg-clay px-3 py-2 text-xs font-black uppercase tracking-wide text-white shadow-sm transition hover:bg-[#8d4223] md:hidden">
           <Heart className="h-4 w-4" />
           Donate
         </a>
@@ -204,7 +206,7 @@ function Navbar() {
               {link.label}
             </a>
           ))}
-          <a href={isGallery ? '/#fundraising' : '#fundraising'} className="ml-2 inline-flex items-center gap-2 rounded bg-clay px-4 py-2 text-sm font-bold uppercase tracking-wide text-white shadow-sm transition hover:bg-[#8d4223]">
+          <a href={isSubpage ? '/#fundraising' : '#fundraising'} className="ml-2 inline-flex items-center gap-2 rounded bg-clay px-4 py-2 text-sm font-bold uppercase tracking-wide text-white shadow-sm transition hover:bg-[#8d4223]">
             <Heart className="h-4 w-4" />
             Donate
           </a>
@@ -529,6 +531,52 @@ function GalleryPage() {
   );
 }
 
+function AcknowledgementsPage() {
+  const names = ['Shane', 'Pops', 'Ted', 'Nathan'];
+
+  return (
+    <main className="bg-[#f8f7f1]">
+      <section className="relative overflow-hidden bg-ink px-4 py-20 text-white sm:px-6 sm:py-24 lg:px-8">
+        <img src="/gallery/jump-line.jpg" alt="" className="absolute inset-0 h-full w-full object-cover opacity-30" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/55 to-black/25" />
+        <div className="relative mx-auto max-w-7xl">
+          <p className="text-sm font-black uppercase tracking-[0.25em] text-sand">Acknowledgements</p>
+          <h1 className="mt-4 max-w-4xl font-display text-5xl font-black leading-tight sm:text-7xl">
+            Built by people who showed up.
+          </h1>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+        <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+          <div className="rounded border border-black/10 bg-white p-6 shadow-trail sm:p-8">
+            <h2 className="font-display text-4xl font-black text-pine">Big thanks</h2>
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              {names.map((name) => (
+                <div key={name} className="rounded bg-[#f4f0e5] px-5 py-4 text-2xl font-black text-ink">
+                  {name}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded border border-black/10 bg-white p-6 shadow-sm sm:p-8">
+            <p className="text-2xl font-black leading-tight text-ink sm:text-3xl">
+              Thank you to Shane, Pops, Ted, Nathan, and every volunteer who has poured countless dollars, sweat, tears, and blood into shaping these trails.
+            </p>
+            <p className="mt-6 text-lg leading-8 text-ink/72">
+              Muscogee exists because people gave their time, tools, weekends, and backs to build something for the riding community. Every berm, feature, bridge, workday, repair, and cleared section carries that effort.
+            </p>
+            <p className="mt-5 text-lg leading-8 text-ink/72">
+              This page is for the builders, maintainers, donors, and riders who keep showing up.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
+
 function Connect() {
   return (
     <section id="connect" className="bg-[#f8f7f1] py-16 sm:py-20">
@@ -553,11 +601,14 @@ function Connect() {
 
 export default function App() {
   const isGallery = window.location.pathname === '/gallery';
+  const isAcknowledgements = window.location.pathname === '/acknowledgements';
 
   return (
     <div className="min-h-screen bg-[#f8f7f1]">
       <Navbar />
-      {isGallery ? (
+      {isAcknowledgements ? (
+        <AcknowledgementsPage />
+      ) : isGallery ? (
         <GalleryPage />
       ) : (
         <main>
