@@ -1,6 +1,7 @@
 import {
   ArrowRight,
   Bike,
+  Camera,
   Droplets,
   ExternalLink,
   Facebook,
@@ -71,7 +72,18 @@ const facts = [
   { label: 'Location', value: 'Perdido River', icon: <Map className="h-5 w-5" /> },
 ];
 
-const trailforksMapUrl = 'https://www.trailforks.com/widgets/region_map/?rid=27702&width=100%25&height=520&activitytype=1&maptype=trailforks&trailstyle=difficulty&controls=1';
+const galleryPhotos = [
+  { src: '/gallery/trail-map-board.jpg', alt: 'Trailhead map board and bike at Muscogee' },
+  { src: '/gallery/muscogee-sign.jpg', alt: 'Muscogee Mountain Bike Trails sign' },
+  { src: '/gallery/wood-feature.jpg', alt: 'Wood trail feature in the pines' },
+  { src: '/gallery/pine-sun.jpg', alt: 'Sun over pine forest at Muscogee' },
+  { src: '/gallery/jump-line.jpg', alt: 'Jump line through the woods' },
+  { src: '/gallery/skinny-crossing.jpg', alt: 'Wood skinny crossing over brush' },
+  { src: '/gallery/rock-garden.jpg', alt: 'Rock garden on singletrack' },
+  { src: '/gallery/trail-flower.jpg', alt: 'Wildflower along the trail' },
+  { src: '/gallery/grill-day.jpg', alt: 'Trail day food at the shelter' },
+  { src: '/gallery/dirt-jumps.jpg', alt: 'Dirt jumps at Muscogee' },
+];
 
 function Currency({ value }: { value: number }) {
   return <>{value.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })}</>;
@@ -83,11 +95,13 @@ function Inches({ millimeters }: { millimeters?: number }) {
 }
 
 function Navbar() {
+  const isGallery = window.location.pathname === '/gallery';
   const links = [
-    { label: 'Conditions', href: '#conditions' },
-    { label: 'Fundraising', href: '#fundraising' },
-    { label: 'Map', href: '#map' },
-    { label: 'Connect', href: '#connect' },
+    { label: 'Conditions', href: isGallery ? '/#conditions' : '#conditions' },
+    { label: 'Fundraising', href: isGallery ? '/#fundraising' : '#fundraising' },
+    { label: 'Map', href: isGallery ? '/#map' : '#map' },
+    { label: 'Gallery', href: '/gallery' },
+    { label: 'Connect', href: isGallery ? '/#connect' : '#connect' },
   ];
 
   return (
@@ -102,7 +116,7 @@ function Navbar() {
             <span className="block text-xs font-semibold uppercase tracking-[0.22em] text-clay">MTB Trails</span>
           </span>
         </a>
-        <a href="#fundraising" className="inline-flex items-center gap-2 rounded bg-clay px-3 py-2 text-xs font-black uppercase tracking-wide text-white shadow-sm transition hover:bg-[#8d4223] md:hidden">
+        <a href={isGallery ? '/#fundraising' : '#fundraising'} className="inline-flex items-center gap-2 rounded bg-clay px-3 py-2 text-xs font-black uppercase tracking-wide text-white shadow-sm transition hover:bg-[#8d4223] md:hidden">
           <Heart className="h-4 w-4" />
           Donate
         </a>
@@ -112,7 +126,7 @@ function Navbar() {
               {link.label}
             </a>
           ))}
-          <a href="#fundraising" className="ml-2 inline-flex items-center gap-2 rounded bg-clay px-4 py-2 text-sm font-bold uppercase tracking-wide text-white shadow-sm transition hover:bg-[#8d4223]">
+          <a href={isGallery ? '/#fundraising' : '#fundraising'} className="ml-2 inline-flex items-center gap-2 rounded bg-clay px-4 py-2 text-sm font-bold uppercase tracking-wide text-white shadow-sm transition hover:bg-[#8d4223]">
             <Heart className="h-4 w-4" />
             Donate
           </a>
@@ -174,9 +188,6 @@ function TrailConditionGauge() {
         <div>
           <p className="text-sm font-black uppercase tracking-[0.25em] text-clay">Advisory trail gauge</p>
           <h2 className="mt-3 font-display text-4xl font-black text-pine sm:text-5xl">Wet to dry at a glance</h2>
-          <p className="mt-5 text-lg leading-8 text-ink/72">
-            This gauge uses recent precipitation near the trail corridor, with Pensacola airport as a fallback. It is a riding judgment tool, not an official closure status.
-          </p>
         </div>
 
         <div className="rounded border border-black/10 bg-white p-6 shadow-trail">
@@ -253,9 +264,6 @@ function Fundraising() {
           <div>
             <p className="text-sm font-black uppercase tracking-[0.25em] text-sand">Fundraising goals</p>
             <h2 className="mt-3 font-display text-4xl font-black sm:text-5xl">Help build the next phase</h2>
-            <p className="mt-5 text-lg leading-8 text-white/72">
-              Every line item maps to trail work: materials, machine time, tools, fuel, and new progression features.
-            </p>
           </div>
           <div className="rounded border border-white/15 bg-white/8 p-6">
             <p className="text-sm font-black uppercase tracking-[0.22em] text-white/55">Total target</p>
@@ -299,18 +307,12 @@ function TrailInfo() {
             <p className="text-sm font-black uppercase tracking-[0.25em] text-river">Plan a ride</p>
             <h2 className="mt-3 font-display text-4xl font-black text-pine sm:text-5xl">Trail map and access</h2>
             <p className="mt-5 text-lg leading-8 text-ink/72">
-              Muscogee is a public trail system near Pensacola with community-built singletrack and ongoing expansion work. Use the interactive map to explore the riding area, then check community updates before heading out.
+              Muscogee is a public trail system near Pensacola with community-built singletrack and ongoing expansion work.
             </p>
           </div>
 
           <div className="overflow-hidden rounded border border-black/10 bg-[#f8f7f1] shadow-trail">
-            <iframe
-              title="Trailforks map of Muscogee MTB Trails"
-              src={trailforksMapUrl}
-              className="block h-[520px] w-full border-0"
-              loading="lazy"
-              referrerPolicy="strict-origin-when-cross-origin"
-            />
+            <img src="/gallery/trail-map-board.jpg" alt="Trailhead map board at Muscogee" className="h-[520px] w-full object-cover" />
           </div>
         </div>
 
@@ -321,12 +323,38 @@ function TrailInfo() {
             <a href="https://www.trailforks.com/region/muscogee-mtb-trails-27702/" target="_blank" rel="noreferrer" className="group flex items-center justify-between rounded border border-black/10 bg-[#f8f7f1] p-5 font-black text-ink transition hover:border-pine hover:bg-pine hover:text-white">
               Trailforks map <ExternalLink className="h-5 w-5 transition group-hover:translate-x-1" />
             </a>
+            <a href="/gallery" className="group flex items-center justify-between rounded border border-black/10 bg-[#f8f7f1] p-5 font-black text-ink transition hover:border-pine hover:bg-pine hover:text-white">
+              Photo gallery <Camera className="h-5 w-5 transition group-hover:translate-x-1" />
+            </a>
             <a href="https://www.facebook.com/groups/448148798865409/" target="_blank" rel="noreferrer" className="group flex items-center justify-between rounded border border-black/10 bg-[#f8f7f1] p-5 font-black text-ink transition hover:border-pine hover:bg-pine hover:text-white">
               Facebook community <Facebook className="h-5 w-5 transition group-hover:translate-x-1" />
             </a>
         </div>
       </div>
     </section>
+  );
+}
+
+function GalleryPage() {
+  return (
+    <main className="bg-[#f8f7f1]">
+      <section className="bg-ink px-4 py-16 text-white sm:px-6 sm:py-20 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <p className="text-sm font-black uppercase tracking-[0.25em] text-sand">Muscogee MTB Trails</p>
+          <h1 className="mt-3 font-display text-5xl font-black leading-tight sm:text-6xl">Gallery</h1>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        <div className="columns-1 gap-5 sm:columns-2 lg:columns-3">
+          {galleryPhotos.map((photo) => (
+            <a key={photo.src} href={photo.src} className="mb-5 block break-inside-avoid overflow-hidden rounded border border-black/10 bg-white shadow-sm">
+              <img src={photo.src} alt={photo.alt} className="w-full object-cover transition duration-300 hover:scale-[1.02]" loading="lazy" />
+            </a>
+          ))}
+        </div>
+      </section>
+    </main>
   );
 }
 
@@ -353,16 +381,22 @@ function Connect() {
 }
 
 export default function App() {
+  const isGallery = window.location.pathname === '/gallery';
+
   return (
     <div className="min-h-screen bg-[#f8f7f1]">
       <Navbar />
-      <main>
-        <Hero />
-        <TrailConditionGauge />
-        <Fundraising />
-        <TrailInfo />
-        <Connect />
-      </main>
+      {isGallery ? (
+        <GalleryPage />
+      ) : (
+        <main>
+          <Hero />
+          <TrailConditionGauge />
+          <Fundraising />
+          <TrailInfo />
+          <Connect />
+        </main>
+      )}
       <footer className="border-t border-black/10 bg-white px-4 py-8 text-center text-sm font-semibold text-ink/55">
         Muscogee Mountain Bike Trails fundraiser concept. Weather estimates are advisory.
       </footer>
